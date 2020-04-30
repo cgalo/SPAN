@@ -27,11 +27,17 @@ int main(int argc, char** argv)
         ifstream inFile;            //Initiate a ifstream to open file
         inFile.open(file);          //Open the file given by the user
         if (!inFile)                //If we couldn't open the file
-            cout << "Error! Couldn't open file: " << file <<  endl; //Output file error
+        {
+            cout << "Error! Couldn't open file: " << file << endl; //Output file error
+            exit(1);                //Terminate with error
+        }
         else                        //Else we could open the file
         {
+            int totNodes;           //Initiate variable of total nodes in the upcoming file
+            inFile >> totNodes;     //Total nodes should be in the first line of the file
 
         }   //End of else, if we could open the file
+        inFile.close();             //Close the file
 
     }
     return 0;
