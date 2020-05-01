@@ -1,5 +1,5 @@
 //
-// Created by Carlos Galo on 4/28/20.
+// Created by Carlos Galo on 4/30/20.
 //
 
 #ifndef SPAN_LINKEDLIST_H
@@ -7,15 +7,6 @@
 
 
 class LinkedList {
-private:
-    struct Node
-    {
-
-    };  //End of struct Node
-    Node* head;
-
-public:
-    LinkedList();
 
 };
 

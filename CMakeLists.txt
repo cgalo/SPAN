@@ -3,4 +3,4 @@ project(SPAN)
 
 set(CMAKE_CXX_STANDARD 14)
 
-add_executable(SPAN main.cpp LinkedList/LinkedList.cpp LinkedList/LinkedList.h MinHeap/MinHeap.cpp MinHeap/MinHeap.h)
+add_executable(SPAN main.cpp MinHeap/MinHeap.cpp MinHeap/MinHeap.h MinSpanTree/MinSpanTree.cpp MinSpanTree/MinSpanTree.h LinkedList/LinkedList.cpp LinkedList/LinkedList.h)
