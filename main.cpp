@@ -9,6 +9,7 @@
 
 #include <iostream>
 #include "MinSpanTree/MinSpanTree.h"
+#include "LinkedList/LinkedList.h"
 
 using namespace std;
 
@@ -16,7 +17,6 @@ int main(int argc, char** argv)
 {
     //Argv0 = SPAN.exe
     //1 = Name of the file, aka file.txt
-
 
     if (argc < 1)       //If the user did not provide at least one argument
         cout << "Error! Please enter file location." << endl;
