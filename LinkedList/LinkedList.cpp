@@ -105,14 +105,13 @@ char ** LinkedList::getTopVertices()
      *  -Else return the head's chars
      * */
 
-    if (isEmpty())              //If
-        return nullptr;
-    else
+    if (isEmpty())                  //If the LL is empty
+        return nullptr;             //Return a null ptr
+    else                            //Else the LL is not empty
     {
-        char *A = head->A;
-        char* B = head->B;
-
-        char * array [] = {A, B};
-        return array;
-    }
+        char *A = head->A;          //Get and save the head's char A
+        char* B = head->B;          //Get and save the head's char B
+        char * array [] = {A, B};   //Create an array that holds char A & B
+        return array;               //Return the array
+    }   //End of else, if the LL is not empty
 }   //End of getTopVertices

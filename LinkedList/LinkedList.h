@@ -50,7 +50,7 @@ public:
     bool isEmpty();             //Check if the LL is empty
     int getTotNodes();          //Return the total Nodes inserted into the graph
     void popFront();            //Pop/remove the current head/top of the LL
-    char** getTopVertices();    //Return the vertices inside the current head/top of the LL
+    char** getTopVertices();    //Return the chars(A & B) of the current head
 
 
 };
