@@ -1,6 +1,14 @@
-//
-// Created by Carlos Galo on 4/30/20.
-//
+/*
+ * Author: Carlos Galo
+ * Created On: 4/30/2020
+ * Program: SPAN
+ * Class: Non-Linear Data Structures
+ * File: LinkedList.cpp
+ *  - Source file for the LinkedList class
+ *  - LinkedList class is used to save the data from file as a graph
+ *  - Called in the MinSpanTree class
+ *  - This is a single LL
+ * */
 
 #include "LinkedList.h"
 
@@ -10,8 +18,8 @@ LinkedList::LinkedList()
      * Objective: Initialize all variables as null/0
      * */
     
-    this->head      = nullptr;   //Set the head as null
-    this->totNodes  = 0;
+    this->head      = nullptr;          //Set the head as null
+    this->size      = 0;                //Set the size to 0
 }   //End of constructor
 
 LinkedList::~LinkedList() 
@@ -20,9 +28,7 @@ LinkedList::~LinkedList()
      * Objective: Set all variables back to null and delete any Nodes in the LL
      * */
     
-    this->totNodes  = 0;
-    
-    //Now delete all Nodes in the LL
+    //Delete all nodes inside the LL
     Node* currentNode = head;           //Start from the head of the LL
     while (currentNode != nullptr)      //While there are still nodes in the LL
     {
@@ -32,6 +38,7 @@ LinkedList::~LinkedList()
     }   //End of while-loop
     //We get here by looping and deleting all Nodes in the LL
     this->head  = nullptr;              //Set the head of the LL back to null
+    this->size  = 0;                    //Set the size 0
 }   //End of destructor
 
 bool LinkedList::isEmpty() 
@@ -66,7 +73,7 @@ void LinkedList::insert(int index1, int index2, int weight)
         //We get here after falling off the LL, we insert the new node as 'next' for the pastNode
         pastNode->next = insertNode;            //Connect the pastNode to the new insertNode
     }   //End of else, if the LL is not empty
-    this->totNodes++;                           //Increase the total Nodes inserted into the LL
+    size++;                                     //Increase the total Nodes inserted into the LL
 }   //End of insert method
 
 void LinkedList::popFront()
@@ -84,16 +91,17 @@ void LinkedList::popFront()
         Node* popNode = head;                               //Remember the head before setting a new head
         head = head->next;                                  //Set the head's next Node as new head of the LL
         delete popNode;                                     //Delete the old head, perform garbage collection
+        size--;                                             //Update the size of the LL by decreasing by 1
     }   //End of else
 }   //End of popFront method
 
-int LinkedList::getTotNodes()
+int LinkedList::getSize()
 {
     /* getTotNodes, parameter(s): None
      * Objective: Return the variable totNodes
      * */
 
-    return totNodes;
+    return size;
 }   //End of getTotNodes method
 
 void LinkedList::print()
@@ -126,8 +134,8 @@ int * LinkedList::getTopIndexes()
         return nullptr;                                     //Return nullptr
     else                                                    //Else the LL is not empty
     {
-        int indexes[] = {head->index1, head->index2};       //Create int array with the head's indexes
-        return indexes;                                     //Return the int array
+        int indexList[] = {head->index1, head->index2};     //Create int array with the head's indexes
+        return indexList;                                   //Return the int array
     }   //End of else, if the LL is not empty
 }   //End of getTopIndexes method
 
@@ -156,3 +164,12 @@ LinkedList * LinkedList::cloneLL(LinkedList *LL)
         return returnLL;                                    //Return the cloned returnLL
     }   //End of else, if the LL is not empty
 }   //End of clone method
+
+int LinkedList::getTopWeight()
+{
+    //Base case
+    if (isEmpty())                                  //If the heap array is empty
+        return -1;                                  //Return -1
+    else                                            //Else the heap array is not empty
+        return head->weight;                    //Return the weight of the first node in the array
+}   //End of getMinWeight
