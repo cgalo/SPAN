@@ -44,13 +44,13 @@ bool LinkedList::isEmpty()
     return head == nullptr;
 }   //End of isEmpty method
 
-void LinkedList::insert(char *a, char *b, int weight)
+void LinkedList::insert(int index1, int index2, int weight)
 {
     /* insert public method, parameter(s): char array <a>, char array <b>, int <weight>
      * Objective: Get the parameters, create a new Node, and append it in the LL
      * */
 
-    Node* insertNode = new Node(a, b, weight);  //Create a new Node to insert in the LL
+    Node* insertNode = new Node(index1, index2, weight);  //Create a new Node to insert in the LL
     //Base case
     if (head == nullptr)                        //If the LL is empty
         head = insertNode;                      //Insert the Node as head of the LL
@@ -96,22 +96,63 @@ int LinkedList::getTotNodes()
     return totNodes;
 }   //End of getTotNodes method
 
-char ** LinkedList::getTopVertices()
+void LinkedList::print()
 {
-    /* getTopVertices public method, parameter(s): None
-     * Objective: return char array with the current head's chars (A & B)
-     * Notes:
-     *  -If LL is empty then return nullptr
-     *  -Else return the head's chars
+    if (isEmpty())                                          //If the LL is empty
+        std::cout << "Linked List is empty" << std::endl;
+    else                                                    //Else the LL is not empty
+    {
+        Node* node = head;                                  //Start at the head of the LL
+        while (node != nullptr)                             //Iterate through the LL
+        {
+            std::cout << "Edge: "   << node->index1 << ", " << node->index2 << std::endl;
+            std::cout << "Weight: " << node->weight << std::endl;
+            std::cout << std::endl;
+            node = node->next;                              //Move to the next node in the LL
+        }   //End of while-loop
+    }   //End of else, if the Ll is not empty
+}   //End of print method
+
+int * LinkedList::getTopIndexes()
+{
+    /* getTopIndexes public method, parameter(s): None
+     * Objective: Return an int array containing the two indexes found in the head/top node
+     * -If head is empty return nullptr
+     * -Else return int array of the head's indexes
      * */
 
-    if (isEmpty())                  //If the LL is empty
-        return nullptr;             //Return a null ptr
-    else                            //Else the LL is not empty
+    //Base case
+    if (isEmpty())                                          //If LL is empty
+        return nullptr;                                     //Return nullptr
+    else                                                    //Else the LL is not empty
     {
-        char *A = head->A;          //Get and save the head's char A
-        char* B = head->B;          //Get and save the head's char B
-        char * array [] = {A, B};   //Create an array that holds char A & B
-        return array;               //Return the array
+        int indexes[] = {head->index1, head->index2};       //Create int array with the head's indexes
+        return indexes;                                     //Return the int array
     }   //End of else, if the LL is not empty
-}   //End of getTopVertices
+}   //End of getTopIndexes method
+
+LinkedList * LinkedList::cloneLL(LinkedList *LL)
+{
+    /* cloneLL public method, parameter(s): LinkedList <LL>
+     * Objective: Copy every node in the LL into a new LL and return the new LL
+     * - If the given LL is empty return nullptr
+     * - Else traverse the given LL and copy it into a new LL, return the new LL at the end
+     * */
+
+    //Base case
+    if (LL->isEmpty())                                      //If the LL is empty
+        return nullptr;                                     //Return nullptr
+    else
+    {
+        LinkedList* returnLL = new LinkedList();            //Initiate an empty LL, will be filled and returned at the end
+        Node* currentNode = LL->head;                       //Get the current head of the given LL
+        while (currentNode != nullptr)
+        {
+            //Get the data inside the current node to create a new node into out returnLL
+            returnLL->insert(currentNode->index1, currentNode->index2, currentNode->weight);
+            currentNode = currentNode->next;                //Move to the next node in the LL
+        }   //End of while-loop
+        //We get here after cloning everything from LL to returnLL
+        return returnLL;                                    //Return the cloned returnLL
+    }   //End of else, if the LL is not empty
+}   //End of clone method
