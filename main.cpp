@@ -23,7 +23,7 @@ int main(int argc, char** argv)
         char * file  = argv[1];                                 //Save the file provided by the user in the argument 1
         MinSpanTree* MSP = new MinSpanTree(file);               //Initiate the MinSpanTree object
         MSP->getKruskalMSP();                                   //Output the results of Kruskal's Algorithm
-        cout << "-------------------" << endl;                  //Separate the result between the two algorithms
+        cout << "------------------------------------" << endl; //Separate the result between the two algorithms
         MSP->getPrimMSP();                                      //Output the results of Prim's Algorithm
         delete MSP;                                             //Garbage collection on the MinSpanTree object
     }   //End of else, if the user provided at least one argument

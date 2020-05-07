@@ -40,9 +40,10 @@ private:
     Node** vertices;                                        //Keep track of all the vertices given in the input file
 
     //Methods
-    MinHeap* graphToQueue();                                //Create a queue utilizing the data in the graph (LL)
+    MinHeap* buildQueue();                                  //Create a queue utilizing the data in the graph (LL)
     void insertToGraph(int matrixLine[], int nodeIndex);    //Gets the vertices and edge weight, to insert into graph
-
+    Node** KruskalMST(MinHeap* queue);                      //Perform Kruskal's Algorithm and return set of vertices
+    Node** PrimMST(MinHeap* queue);                         //Perform Prim's Algorithm and return set of vertices
 
 public:
     MinSpanTree(char* file);                                //Constructor that requires a char array to point to file

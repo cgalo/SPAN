@@ -6,6 +6,7 @@
  * File: LinkedList.h
  *  - Header file for the LinkedList class
  *  - LinkedList class is used to save the data from file as a graph
+ *  - Called in the MinSpanTree class
  *  - This is a single LL
  * */
 
@@ -41,8 +42,9 @@ private:
             this->next      = nullptr;                  //Set next node pointer to nil
         }   //End of explicit Node constructor
     };  //End of constructor
+    //Variables
     Node* head;                                         //Top Node in the LL
-    int totNodes;                                       //Total Nodes inserted
+    int size;                                           //Total Nodes inserted
 public:
     LinkedList();                                       //Basic constructor
     ~LinkedList();                                      //Destructor for garbage collection
@@ -50,10 +52,11 @@ public:
     //Methods
     void insert(int index1, int index2, int weight);    //Create a new node/edge and insert it into the LL
     bool isEmpty();                                     //Check if the LL is empty
-    int getTotNodes();                                  //Return the total Nodes inserted into the graph
+    int getSize();                                      //Return the total Nodes inserted into the graph
     void popFront();                                    //Pop/remove the current head/top of the LL
     void print();                                       //Print every nodes' data in the LL
     int *getTopIndexes();                               //Return array of the two int indexes in the head node
+    int getTopWeight();                                 //Return the weight of the LL's head node
     LinkedList* cloneLL(LinkedList* LL);                //Return an exact copy oof the given LL
 };
 
