@@ -23,14 +23,14 @@ private:
     struct Node
     {
         //Will use this struct to save an array of characters
-        char data [2] = {};                         //Data for this node, char array of size 2
-        Node()                                      //Basic constructor
+        char data [2] = {};                                 //Data for this node, char array of size 2
+        Node()                                              //Basic constructor
         {
-            for (char & i : this->data) i = '\0';   //Leave the data array of this node empty
+            for (char & i : this->data) i = '\0';           //Leave the data array of this node empty
         }
-        explicit Node(char data[])                  //Constructor given a char array
+        explicit Node(char data[])                          //Constructor given a char array
         {
-            strcpy(this->data, data);               //Copy the given data to this node's data
+            strcpy(this->data, data);                       //Copy the given data to this node's data
         }   //End of explicit Node constructor
     };  //End of struct Node
 
@@ -43,7 +43,8 @@ private:
     MinHeap* buildQueue();                                  //Create a queue utilizing the data in the graph (LL)
     void insertToGraph(int matrixLine[], int nodeIndex);    //Gets the vertices and edge weight, to insert into graph
     Node** KruskalMST(MinHeap* queue);                      //Perform Kruskal's Algorithm and return set of vertices
-    Node** PrimMST(MinHeap* queue);                         //Perform Prim's Algorithm and return set of vertices
+    MinHeap* PrimMST();                                     //Perform Prim's Algorithm and return queue of vertices
+    int getMinIndex(int arr[], bool set[]);                 //Return the index of the smallest value in the array
 
 public:
     MinSpanTree(char* file);                                //Constructor that requires a char array to point to file
@@ -52,7 +53,6 @@ public:
     //Methods
     void getKruskalMSP();                                   //Get and output the results of Kruskal's algorithm
     void getPrimMSP();                                      //Get and output the results of Prim's algorithm
-
 };  //End of MinSpanTree class
 
 
