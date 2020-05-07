@@ -16,7 +16,7 @@ MinSpanTree::MinSpanTree(char *file)
     inFile.open(file);                                  //Open the provided file
     if (!inFile)                                        //If there was an issue opening the file
     {
-        std::cout << "Error! There was an issue opening file: " << file << std::endl;   //Output error message
+        std::cerr << "Error! There was an issue opening file: " << file << std::endl;   //Output error message
         exit(1);                                        //Exit the program with an error
     }   //End of if there was an issue opening the file
     else                                                //Else we opened the file successfully
@@ -26,7 +26,7 @@ MinSpanTree::MinSpanTree(char *file)
         if (totVertices == 0)                           //Check if there was an error getting total vertices in the graph
         {
             //For error handling, if there was an issue getting total vertices/nodes from the file
-            std::cout << "Error getting the total nodes/vertices" << std::endl; //Output error
+            std::cerr << "Error getting the total nodes/vertices" << std::endl; //Output error
             exit(1);                                    //Exit the program with error code
         }   //End of if totVertices is 0
         vertices = new Node *[totVertices];             //Create array of nodes of the size given from the file (totVertices)
@@ -39,9 +39,11 @@ MinSpanTree::MinSpanTree(char *file)
         }   //End of for-loop
         //We get here by filling the array of vertices of size totVertices
         //Now get the data of each vertex in the matrix, matrix is size totVertices * totVertices
-        graph = new LinkedList();                       //Initiate the LL to save the file's graph
+        graph   = new LinkedList();                     //Initiate the LL to save the file's graph
+        graph2D = new int *[totVertices];               //Initialize a 2D int array to save the graph
         for (int vertIndex = 0; vertIndex < totVertices; vertIndex++)   //Loop through each
         {
+            graph2D[vertIndex] = new int[totVertices];  //Initialize a new int array in the 2D graph
             int nums[totVertices];                      //Initiate an int array of size of totVertices for this
             int indexNums = 0;                          //Keep track of how many numbers we've seen
             char c;                                     //Use to read character by character in the file
@@ -60,6 +62,7 @@ MinSpanTree::MinSpanTree(char *file)
 
                     int num = atoi(numArr);             //Convert the char array into an int using atoi, save it as int
                     nums[indexNums] = num;              //Insert num in the nums array
+                    graph2D[vertIndex][indexNums] = num;
                     indexNums++;                        //Increase the indexNums
 
                     if (indexNums == totVertices)       //If we have inserted the line of numbers into the array
@@ -69,6 +72,8 @@ MinSpanTree::MinSpanTree(char *file)
                     continue;                           //We don't care if it's not a number so we continue to the next char
             }   //End of while-loop
             insertToGraph(nums, vertIndex);             //Call method to check what vertices are connected to this node and insert to graph
+            //testGraph[vertIndex] = new int[totVertices];
+            //testGraph[vertIndex] = nums;
         }   //End of for-loop
         //We get here after reading through the whole matrix and filling out our 'graph' with edges and their vertices
     }   //End of else, if there was no issue opening the file
@@ -78,8 +83,12 @@ MinSpanTree::~MinSpanTree(){
     //Destructor for garbage collection purposes
     delete graph;                           //Perform garbage collection in the graph
     for (int i = 0; i < totVertices; i++)   //Traverse the array of nodes
+    {
         delete vertices[i];                 //Delete the node in the current location
+        delete[] graph2D[i];                //Delete the data inside the 2D matrix
+    }
     delete vertices;                        //Delete the vertices array
+    delete graph2D;                         //Delete the 2D graph, int array
     this->totVertices = 0;                  //Set total vertices back to 0
 }   //End of destructor
 
@@ -115,7 +124,7 @@ MinHeap* MinSpanTree::buildQueue()
     if (graph->isEmpty())                                       //If the graph is empty
     {
         //Output error message
-        std::cout << "Error! There was an issue saving the graph" << std::endl;
+        std::cerr << "Error! There was an issue saving the graph" << std::endl;
         exit(1);                                                //Exit program with error
     }   //End of if the graph is empty
     else
@@ -150,6 +159,17 @@ MinSpanTree::Node ** MinSpanTree::KruskalMST(MinHeap *queue)
      * - Else perform algorithm
      * */
 
+    //Base case
+    if (queue->isEmpty())                                       //If the queue is empty before starting
+    {
+        std::cerr << "Error! There was an issue building queue" << std::endl;   //Output error
+        exit(1);                                                //Exit the program with error
+    }
+    else                                                        //Else the queue is not empty
+    {
+        Node** MST = new Node* [totVertices-1];                 //Initiate an array of size vertices-1
+
+    }   //End of else, if the queue is not empty
 }   //End of KruskalMST method
 
 void MinSpanTree::getKruskalMSP()
@@ -164,6 +184,18 @@ MinSpanTree::Node ** MinSpanTree::PrimMST(MinHeap *queue)
      * - If the queue is empty before performing an algorithm then exit with error
      * - Else perform algorithm
      * */
+
+    //Base case
+    if (queue->isEmpty())                                       //If the queue is empty before starting
+    {
+        std::cerr << "Error! There was an issue building queue" << std::endl;   //Output error
+        exit(1);                                                //Exit the program with error
+    }
+    else                                                        //Else the queue is not empty
+    {
+        Node** MST = new Node* [totVertices-1];                 //Initiate an array of size vertices-1
+
+    }   //End of else, if the queue is not empty
 }   //End of PrismMST method
 void MinSpanTree::getPrimMSP()
 {

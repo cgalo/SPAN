@@ -38,7 +38,7 @@ private:
     LinkedList* graph;                                      //Will connect vertices pairs and their weights as a graph
     int totVertices;                                        //Total vertices/nodes in the spanning tree
     Node** vertices;                                        //Keep track of all the vertices given in the input file
-
+    int ** graph2D;                                         //Graphed saved in a 2D array
     //Methods
     MinHeap* buildQueue();                                  //Create a queue utilizing the data in the graph (LL)
     void insertToGraph(int matrixLine[], int nodeIndex);    //Gets the vertices and edge weight, to insert into graph
