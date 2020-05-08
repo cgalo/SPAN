@@ -1,9 +1,16 @@
-//
-// Created by Carlos Galo on 4/30/20.
-//
+/*
+ * Author: Carlos Galo
+ * Created On: 4/30/2020
+ * Program: SPAN
+ * Class: Non-Linear Data Structures
+ * File: MinSpanTree.cpp
+ *  - Source file for the MinSpanTree class
+ *  - This class will handle most of the logic, utilizes classes:
+ *      -- LinkedList to save the graph's edges and vertices
+ *      -- MinHeap to save the graph's data into a queue and perform Kruskal & Prism algorithms
+ * */
 
 #include "MinSpanTree.h"
-#include "../LinkedList/LinkedList.h"
 
 MinSpanTree::MinSpanTree(char *file)
 {
@@ -151,7 +158,7 @@ MinHeap* MinSpanTree::buildQueue()
     }   //End of else, if the graph is not empty
 }   //End of graphToQueue method
 
-MinSpanTree::Node ** MinSpanTree::KruskalMST(MinHeap *queue)
+MinHeap* MinSpanTree::KruskalMST(MinHeap *queue)
 {
     /* KruskalMST private method, parameter(s): MinHeap <queue>
      * Objective: Perform Kruskal's algorithm and return array of vertices
@@ -167,15 +174,55 @@ MinSpanTree::Node ** MinSpanTree::KruskalMST(MinHeap *queue)
     }
     else                                                        //Else the queue is not empty
     {
-        Node** MST = new Node* [totVertices-1];                 //Initiate an array of size vertices-1
+        MinHeap* MST = new MinHeap(totVertices-1);      //MinHeap used to save the MinSpanTree (MST),
+        set* Set = new set(totVertices);                        //Initiate a set for the Kruskal's algorithm
+        while (!queue->isEmpty())                               //Loop until the queue is empty
+        {
+            //Get the data from the first/top node/edge in the queue
+            int* indexes    = queue->getMinIndexes();           //Get the indexes from the top/first node in the heap
+            int u = indexes[0];                                 //Save the first index as 'u'
+            int v = indexes[1];                                 //Save the second index as 'v'
+            queue->popMin();                                    //Remove the top/first node in the heap
 
-        return MST;
+            int index1 = Set->findSet(u);                       //Get the index location of set 1
+            int index2 = Set->findSet(v);                       //Get the index location of set 2
+
+            //Check if the indexes point to each other, if it does then this is a 'cycle' in the graph
+            if (index1 != index2)                               //If it's NOT a cycle
+            {
+                MST->push(u,v, u);   //Insert the edge from the queue to the MST
+                Set->Union(index1, index2);                     //Perform union passing the index1 set and index2 set
+                if (MST->getMaxSize() == MST->getCurrentSize()) //If we filled the max size of the MST
+                {
+                    delete Set;                                 //Perform garbage collection on the Set
+                    return MST;                                 //Return the MST
+                }   //End of if MST is maxed out
+            }   //End of if the current edge is not a cycle (index1 != index2)
+            else                                                //Else the edge is a cycle
+                continue;                                       //Continue to the next loop, we don't want cycles
+        }   //End of while-loop
+        //We get here after emptying the queue
+        delete Set;                                             //Perform garbage collection on the Set
+        return MST;                                             //Return the MST
     }   //End of else, if the queue is not empty
 }   //End of KruskalMST method
 
 void MinSpanTree::getKruskalMSP()
 {
+    /* getKruskalMSP public method, parameter(s): None
+     * Objective: Output the final results of the KruskalMSP method, which comes in as a MinHeap/queue
+     * - If the queue is empty before reading through it then output error
+     * - Else output the results from the MinHeap by calling method printMST()
+     * */
 
+    MinHeap* MST = KruskalMST(buildQueue());
+    if (MST->isEmpty())                                         //If the MST is empty
+    {
+        std::cerr << "Error in performing Prim's Algorithm!" << std::endl;  //Output error message
+        exit(1);                                                //Exit program with error code 1
+    }   //End of if the MSP is empty
+    else                                                        //Else the MST is NOT empty
+        printMST(MST);                                          //Call method printMST to output the data for the MST
 }   //End of getKruskalMSP method
 
 MinHeap* MinSpanTree::PrimMST()
@@ -222,9 +269,10 @@ MinHeap* MinSpanTree::PrimMST()
 int MinSpanTree::getMinIndex(int *arr, bool *set)
 {
     /* minKey private method, parameter(s): int array <arr>, bool array <set>
-     * Objective: Return the smallest index in the array that is not already in the set
+     * Objective: Return the index of the smallest element in the array, that is not already in the set
      * - If all the values in the array are already in the set then we return -1
      * - Else we return the index(minIndex) to the smallest value in the array
+     * * This method is called by the PrimMST() method
      * */
 
     int min = INT_MAX;                                  //Min int variable to track the smallest value
@@ -248,7 +296,7 @@ void MinSpanTree::getPrimMSP()
     /* getPrimMSP public method, parameter(s): None
      * Objective: Output the final results of the PrimMST method, which comes in as a MinHeap/queue
      * - If the queue is empty before reading through it then output error
-     * - Else output the results from the queue
+     * - Else output the results from the MinHeap by calling method printMST()
      * */
 
     MinHeap* MST = PrimMST();                                   //Call and get the results of Prim's Algorithm
@@ -258,17 +306,25 @@ void MinSpanTree::getPrimMSP()
         exit(1);                                                //Exit program with error code 1
     }   //End of if the MSP is empty
     else                                                        //Else the MST is NOT empty
-    {
-        while (!MST->isEmpty())                                 //Traverse the MST queue/MinHeap
-        {
-            int* indexes = MST->getMinIndexes();                //Get the indexes from the first node in the heap
-            int index1 = indexes[0];                            //Save the first index as index1
-            int index2 = indexes[1];                            //Save the second index as index2
-            int weight = graph2D[index1][index2];               //Get and save the weight of the edge from the graph
-            MST->popMin();                                      //Pop the first/top node in the heap
-            //Now output the results
-            std::cout << vertices[index1]->data << "-" << vertices[index2]->data << ": " << weight << std::endl;
-        }   //End of while-loop
-        //We get here after output all the results for the Prim's algorithm, the MST heap is now empty
-    }   //End of else, if the MST heap is not empty
+        printMST(MST);                                          //Call method printMST to output the data for Prim's MST
 }   //End of getPrismMSP method
+
+void MinSpanTree::printMST(MinHeap *MST)
+{
+    /* printMST private method, parameter(s): None
+     * Objective: Output the data inside the MST/MinHeap
+     * */
+
+    while (!MST->isEmpty())                                 //Traverse the MST queue/MinHeap
+    {
+        int* indexes = MST->getMinIndexes();                //Get the indexes from the first node in the heap
+        int index1 = indexes[0];                            //Save the first index as index1
+        int index2 = indexes[1];                            //Save the second index as index2
+        int weight = graph2D[index1][index2];               //Get and save the weight of the edge from the graph
+        MST->popMin();                                      //Pop the first/top node in the heap
+        //Now output the results
+        std::cout << vertices[index1]->data << "-" << vertices[index2]->data << ": " << weight << std::endl;
+    }   //End of while-loop
+    //We get here after emptying/outputting all the data inside the heap/MST
+}   //End of printMST
+
