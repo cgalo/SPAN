@@ -14,9 +14,8 @@ int main(int argc, char** argv)
 {
     //Argv0 = SPAN.exe
     //1 = Name of the file, aka file.txt
-    argc = 2;
-    argv[1] = "/Users/cgalo/Dropbox/CLion/SPAN/Test-Files/test1.txt";
-    if (argc <= 1)                                               //If the user did not provide at least one argument
+
+    if (argc <= 1)                                              //If the user did not provide at least one argument
         cout << "Error! Please enter file location." << endl;   //Output error
 
     else                                                        //Else the user provided at least one argument
