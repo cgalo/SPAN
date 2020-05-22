@@ -8,7 +8,7 @@ For more information regarding MinHeaps check [here](https://www.geeksforgeeks.o
 ### Node
 The node for this class will contain the following data
 |   Variable Name   |   Type    |   Description     |
-|-------------------|:---------:|------------------:|
+|-------------------|:---------:|:-----------------:|
 |   *index1*        |   Integer |   Contains the index location of the 1st vertex in the Graph2D matrix |
 |   *index2*        |   Integer |   Contains the index location of the 2nd vertex in the Graph2D matrix |
 |   *weight*        |   Integer |   This is the value used to determine the position in the heap/queue  |
