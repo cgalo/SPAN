@@ -1,5 +1,5 @@
 # MinHeap Class
-<<<<<<< HEAD
+
 The purpose of this class is to use the MinHeap as a [Priority Queue](https://www.programiz.com/dsa/priority-queue). For a MinHeap, this means that it'll be a priority queue in which the elements are ordererd from minimum to maximum.
 This class is called by the [MinSpanTree](MinSpanTree).
 
