@@ -121,11 +121,10 @@ void MinSpanTree::insertToGraph(int *matrixLine, int vertIndex)
 
 MinHeap* MinSpanTree::buildQueue()
 {
-    /* buildQueue private method, parameter(s): None
+    /**
      * Objective: Create and return a MinHeap with the data inside graph2D
-     * Notes:
-     * -If the queue is empty after iterating through the graph2D output error
-     * -Else return the queue with data
+     * Iterate through the graph2D, multi-dimensional array, and insert the data into the MinHeap <queue>
+     * -We only insert when the the variable 'value' is not equal to 0, then we insert the index locations & the value
      * */
 
     MinHeap* queue = new MinHeap(graph->getSize());//Create a queue with size of total nodes in the graph
