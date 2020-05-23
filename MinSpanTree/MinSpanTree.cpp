@@ -141,12 +141,6 @@ MinHeap* MinSpanTree::buildQueue()
         }   //End of for-loop, looping through every value in the level
     }   //End of for-loop
     //We get here after traversing through every value in the graph2D array
-    if (queue->isEmpty())                                   //If the queue is empty
-    {
-        //Output error message as the queue should not be empty
-        std::cerr << "Error! There was an issue creating queue for Kruskal's Algorithm" << std::endl;
-        exit (1);                                           //Exit program
-    }   //End of if the queue is empty
     return queue;                                           //Return the full queue
 }   //End of graphToQueue method
 
