@@ -122,40 +122,32 @@ void MinSpanTree::insertToGraph(int *matrixLine, int vertIndex)
 MinHeap* MinSpanTree::buildQueue()
 {
     /* buildQueue private method, parameter(s): None
-     * Objective: Create and return a MinHeap with the data inside of the LL 'graph'
-     * -If graph is empty, output error as the graph should never be empty
-     * -Else iterate through the graph and create the MinHeap/queue
+     * Objective: Create and return a MinHeap with the data inside graph2D
+     * Notes:
+     * -If the queue is empty after iterating through the graph2D output error
+     * -Else return the queue with data
      * */
 
-    //Base case, for error handling
-    if (graph->isEmpty())                                       //If the graph is empty
+    MinHeap* queue = new MinHeap(graph->getSize());//Create a queue with size of total nodes in the graph
+    for (int lvl = 0; lvl < totVertices; lvl++)             //Loop through every level in the matrix
     {
-        //Output error message
-        std::cerr << "Error! There was an issue saving the graph" << std::endl;
-        exit(1);                                                //Exit program with error
-    }   //End of if the graph is empty
-    else
-    {
-        //We'll create a clone of the graph so that we don't manipulate any data to reuse again
-        LinkedList* localGraph = graph->cloneLL(graph);         //Create a copy of the graph
-        MinHeap* queue = new MinHeap(graph->getSize()); //Create a queue with size of total nodes in the graph
-        while (!localGraph->isEmpty())                          //Loop the cloned graph until it's empty
+        for (int i = 0; i < totVertices; i++)               //Loop through every value in this level
         {
-            //First lets get the indexes from the graph
-            int* indexes = localGraph->getTopIndexes();         //Get the indexes from the top node in the graph
-            int index1 = indexes[0];                            //Save the first index as index1
-            int index2 = indexes[1];                            //Save the second index as index2
-            //Now lets get the weight
-            int weight = localGraph->getTopWeight();            //Get the weight of the top node/edge in the graph
-            //Now remove the top node of the graph
-            localGraph->popFront();                             //Remove the top node inside the graph
-            //Now insert new node into queue
-            queue->push(index1, index2, weight);                //Insert the data into the queue
-        }   //End of while-lop
-        //We get here after inserting all the graph data the queue/MinHeap
-        delete localGraph;                                      //Perform garbage collection on the LL, 'localGraph'
-        return queue;                                           //Return the full queue
-    }   //End of else, if the graph is not empty
+            int value = graph2D[lvl][i];                    //Save the current value in the 2D graph
+            if (value == 0)                                 //If the current value is 0 then we continue
+                continue;                                   //Continue to the next value in the level
+            else                                            //If the current value is not 0, insert data to the queue
+                queue->push(lvl, i, value);                 //Insert the indexes and value to the queue
+        }   //End of for-loop, looping through every value in the level
+    }   //End of for-loop
+    //We get here after traversing through every value in the graph2D array
+    if (queue->isEmpty())                                   //If the queue is empty
+    {
+        //Output error message as the queue should not be empty
+        std::cerr << "Error! There was an issue creating queue for Kruskal's Algorithm" << std::endl;
+        exit (1);                                           //Exit program
+    }   //End of if the queue is empty
+    return queue;                                           //Return the full queue
 }   //End of graphToQueue method
 
 MinHeap* MinSpanTree::KruskalMST(MinHeap *queue)
