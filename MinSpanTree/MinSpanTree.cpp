@@ -145,14 +145,14 @@ MinHeap* MinSpanTree::KruskalMST(MinHeap *queue)
     }
     else                                                        //Else the queue is not empty
     {
-        MinHeap* MST = new MinHeap(totVertices-1);      //MinHeap used to save the MinSpanTree (MST),
-        set* Set = new set(totVertices);                        //Initiate a set for the Kruskal's algorithm
+        MinHeap* MST    = new MinHeap(totVertices-1);           //MinHeap used to save the MinSpanTree (MST),
+        set* Set        = new set(totVertices);                 //Initiate a set for the Kruskal's algorithm
         while (!queue->isEmpty())                               //Loop until the queue is empty
         {
             //Get the data from the first/top node/edge in the queue
             int* indexes    = queue->getMinIndexes();           //Get the indexes from the top/first node in the heap
-            int u = indexes[0];                                 //Save the first index as 'u'
-            int v = indexes[1];                                 //Save the second index as 'v'
+            int u           = indexes[0];                       //Save the first index as 'u'
+            int v           = indexes[1];                       //Save the second index as 'v'
             queue->popMin();                                    //Remove the top/first node in the heap
 
             int index1 = Set->findSet(u);                       //Get the index location of set 1
@@ -161,7 +161,8 @@ MinHeap* MinSpanTree::KruskalMST(MinHeap *queue)
             //Check if the indexes point to each other, if it does then this is a 'cycle' in the graph
             if (index1 != index2)                               //If it's NOT a cycle
             {
-                MST->push(u,v, u);   //Insert the edge from the queue to the MST
+                int weight = vertices[u][0];                    //Save the first char of the corresponding vertex as weight
+                MST->push(u,v, weight);                         //Insert the edge from the queue to the MST
                 Set->Union(index1, index2);                     //Perform union passing the index1 set and index2 set
                 if (MST->getMaxSize() == MST->getCurrentSize()) //If we filled the max size of the MST
                 {
@@ -193,7 +194,10 @@ void MinSpanTree::getKruskalMSP()
         exit(1);                                                //Exit program with error code 1
     }   //End of if the MSP is empty
     else                                                        //Else the MST is NOT empty
+    {
+        std::cout << "Kruskal\'s Algorithm Results" << std::endl;           //Output algorithm name
         printMST(MST);                                          //Call method printMST to output the data for the MST
+    }   //End of else, if the MSP is not empty
 }   //End of getKruskalMSP method
 
 MinHeap* MinSpanTree::PrimMST()
@@ -203,7 +207,7 @@ MinHeap* MinSpanTree::PrimMST()
      * */
 
     //Initiate variables, with their values, for the algorithm
-    MinHeap* MST = new MinHeap(totVertices-1);                  //Create a MinHeap, called MST, to return at the end
+    MinHeap* MST = new MinHeap(totVertices-1);          //Create a MinHeap, called MST, to return at the end
     int lclVertices[totVertices];                               //Initiate a char array
     int minWeights[totVertices];                                //Array To keep track of min weight edges
     bool set[totVertices];                                      //Create a set, bool array, to keep track of vertices
@@ -231,15 +235,20 @@ MinHeap* MinSpanTree::PrimMST()
             }   //End of if
         }   //End of for-loop, looping through every column in the current row
     }   //End of for-loop, looping through every row in the matrix/graph2D
-    //Now insert the data of indexes/vertices into the MinHeap 'MST', where the weight will be first index
+    //Now insert the data of indexes/vertices into the MinHeap 'MST', where the weight will be the int value of the first char in the corresponding vertex
     for (int i = 1; i < totVertices; i++)                       //Loop through the lclVertices array
-        MST->push(lclVertices[i], i, lclVertices[i]);           //Insert the data into the MST/MinHeap
+    {
+        int index   = lclVertices[i];                           //Save the value of the lclVertices as index
+        int charVal = vertices[index][0];                       //Save the value of first letter of the corresponding vertex
+        MST->push(index, i, charVal);                           //Insert the data into the MST/MinHeap
+    }   //End of for-loop
+
     return MST;                                                 //Return the completed MST
 }   //End of PrismMST method
 
 int MinSpanTree::getMinIndex(int *arr, bool *set)
 {
-    /* minKey private method, parameter(s): int array <arr>, bool array <set>
+    /**
      * Objective: Return the index of the smallest element in the array, that is not already in the set
      * - If all the values in the array are already in the set then we return -1
      * - Else we return the index(minIndex) to the smallest value in the array
@@ -277,25 +286,32 @@ void MinSpanTree::getPrimMSP()
         exit(1);                                                //Exit program with error code 1
     }   //End of if the MSP is empty
     else                                                        //Else the MST is NOT empty
+    {
+        std::cout << "Prim\'s Algorithm Results" << std::endl;  //Output algorithm name
         printMST(MST);                                          //Call method printMST to output the data for Prim's MST
+    }   //End of else, if the MSP is not empty
 }   //End of getPrismMSP method
 
 void MinSpanTree::printMST(MinHeap *MST)
 {
-    /* printMST private method, parameter(s): None
+    /**
      * Objective: Output the data inside the MST/MinHeap
+     * - Loop through the MinHeap until it's empty, get the indexes for the vertices array and graph2D for weight
      * */
 
+    int totWeight = 0;                                      //Keep track of the tot weight of the MinSpanTree
     while (!MST->isEmpty())                                 //Traverse the MST queue/MinHeap
     {
-        int* indexes = MST->getMinIndexes();                //Get the indexes from the first node in the heap
-        int index1 = indexes[0];                            //Save the first index as index1
-        int index2 = indexes[1];                            //Save the second index as index2
-        int weight = graph2D[index1][index2];               //Get and save the weight of the edge from the graph
+        int* indexes    = MST->getMinIndexes();             //Get the indexes from the first node in the heap
+        int index1      = indexes[0];                       //Save the first index as index1
+        int index2      = indexes[1];                       //Save the second index as index2
+        int weight      = graph2D[index1][index2];          //Get and save the weight of the edge from the graph
+        totWeight       += weight;                          //Add the current weight to the total weight variable
         MST->popMin();                                      //Pop the first/top node in the heap
         //Now output the results
         std::cout << vertices[index1] << "-" << vertices[index2] << ": " << weight << std::endl;
     }   //End of while-loop
     //We get here after emptying/outputting all the data inside the heap/MST
+    std::cout << "Total weight: " << totWeight << std::endl;    //Output the total weight of the MSP
+    delete MST;                                             //Perform gargabe collection on the MSP<MinHeap>
 }   //End of printMST
-
