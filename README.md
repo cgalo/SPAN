@@ -1,5 +1,5 @@
 # SPAN
-SPAN is a [CLI App](https://learn.co/lessons/intro-to-cli-applications) created with [CLion IDE](https://www.jetbrains.com/clion/) using C++.
+SPAN is a [CLI App](https://learn.co/lessons/intro-to-cli-applications) developed in C++ utilizing [CLion IDE](https://www.jetbrains.com/clion/).
  
 ### Objective
 The objective of this project is to return the [Minimum Spanning Tree](https://en.wikipedia.org/wiki/Minimum_spanning_tree) given a graph in a text file.
@@ -9,7 +9,14 @@ Utilized and returned two different results using the following algorithms:
 - [Prim's Algorithm](#prim-algorithm)
 
 ### Overview
-For this project, the Input/Ouput (I/0) is handled within the [*main file*](main.cpp). This program only requires one argument in the CLI, this should be a text file that contain a graph. For examples of input files check [here.](Test-Files)The main file passes the CLI argument to the [MinSpanTree](MinSpanTree), which handles the logic for the rest of the project.
+For this project, the Input/Ouput (I/O) is handled within the [*main file*](main.cpp). This program only requires one argument in the CLI, this should be a text file that contain a graph. For examples of input files check [here.](Test-Files)The main file passes the CLI argument to the [MinSpanTree](MinSpanTree), which handles the logic for the rest of the project.
+
+### How Does This Program Work?
+After checking that the user provided one argument in the CLI, the main file will do the following:
+1. Create a new object from the class (MinSpanTree)[MinSpanTree], _MST_ for short, by passing the file location provided by the user.
+2. Call the public method, _getKruskalMSP()_, from the _MST_ object, which will output the results for the Kruskal's Algorithm for the given file/graph.
+3. Output a line of dashes (-) to split the results for the next algorithm
+4. Call the public method, _getPrimMSP()_, from the _MST_ object, which will output the results for the Prim's Algorithm for the same given file/graph.
 
  
 #### Kruskal Algorithm
