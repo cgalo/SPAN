@@ -1,4 +1,4 @@
-/*
+/**
  * Author: Carlos Galo
  * Created On: 4/30/2020
  * Program: SPAN
@@ -6,15 +6,15 @@
  * File: MinSpanTree.cpp
  *  - Source file for the MinSpanTree class
  *  - This class will handle most of the logic, utilizes classes:
- *      -- LinkedList to save the graph's edges and vertices
  *      -- MinHeap to save the graph's data into a queue and perform Kruskal & Prism algorithms
- * */
+ **/
 
 #include "MinSpanTree.h"
 
 MinSpanTree::MinSpanTree(char *file)
 {
-    /* Constructor, parameter(s) char array <file>
+    /**
+     * Constructor, parameter(s) char array <file>
      * Objective: Read given file, that contains graph information, and save the graph and its information
      * */
 
@@ -23,7 +23,7 @@ MinSpanTree::MinSpanTree(char *file)
     inFile.open(file);                                  //Open the provided file
     if (!inFile)                                        //If there was an issue opening the file
     {
-        std::cerr << "Error! There was an issue opening file: " << file << std::endl;   //Output error message
+        std::cerr << "Error! There was an issue opening file: " << file << std::endl;       //Output error message
         exit(1);                                        //Exit the program with an error
     }   //End of if there was an issue opening the file
     else                                                //Else we opened the file successfully
@@ -33,25 +33,33 @@ MinSpanTree::MinSpanTree(char *file)
         if (totVertices == 0)                           //Check if there was an error getting total vertices in the graph
         {
             //For error handling, if there was an issue getting total vertices/nodes from the file
-            std::cerr << "Error getting the total nodes/vertices" << std::endl; //Output error
-            exit(1);                                    //Exit the program with error code
+            std::cerr << "Error getting the total nodes/vertices from file" << std::endl;   //Output error message
+            exit(1);                                    //Exit the program with error code 1
         }   //End of if totVertices is 0
-        vertices = new Node *[totVertices];             //Create array of nodes of the size given from the file (totVertices)
 
-        for (int i = 0; i < totVertices; i++)           //Now loop the file to get the vertices/node names from the graph
+        //Now we need to get the 'name' of each vertex in the graph, this will be saved into a 2D char array
+        vertices = new char*[totVertices];              //Create array of char arrays of size equal to totVertices
+
+        for (int i = 0; i < totVertices; i++)           //Loop the file to get the vertices/nodes names from the graph
         {
-            char vertex[] = {'\0','\0'};                //Initiate an empty char array
-            inFile >> vertex;                           //Read the file's line, up to 2 characters
-            vertices[i] = new Node (vertex);            //Insert a new node with the char array into the vertices array
+            //Each vertex's name is max 2 characters long
+            vertices[i]     = new char[2];              //Create a new char array of size 2
+            char * vertex   = vertices[i];              //Save the current level of vertices as a char array called vertex
+            char c;                                     //Use a local char variable to read the next char in the file
+            inFile >> std::noskipws >> c;               //Get the next char in the file
+            while (!isalpha(c))                         //While we don't get a character/symbol then keep looping
+                inFile >> std::noskipws >> c;           //Get the next char in the file
+            vertex[0] = c;                              //Save the char in the vertex array
+            inFile >> std::noskipws >> c;               //Get the next char in the file
+            if (isalpha(c))                             //Check if the char is an actual letter/symbol
+                vertex[1] = c;                          //Save it in the vertex array
         }   //End of for-loop
         //We get here by filling the array of vertices of size totVertices
         //Now get the data of each vertex in the matrix, matrix is size totVertices * totVertices
-        graph   = new LinkedList();                     //Initiate the LL to save the file's graph
         graph2D = new int *[totVertices];               //Initialize a 2D int array to save the graph
         for (int vertIndex = 0; vertIndex < totVertices; vertIndex++)   //Loop through each
         {
             graph2D[vertIndex] = new int[totVertices];  //Initialize a new int array in the 2D graph
-            int nums[totVertices];                      //Initiate an int array of size of totVertices for this
             int indexNums = 0;                          //Keep track of how many numbers we've seen
             char c;                                     //Use to read character by character in the file
             while (inFile >>std::noskipws>> c)          //Read the next char and save it in 'c'
@@ -68,66 +76,44 @@ MinSpanTree::MinSpanTree(char *file)
                         numArr[1] = nextC;              //Append 'nextC' into the numArr
 
                     int num = atoi(numArr);             //Convert the char array into an int using atoi, save it as int
-                    nums[indexNums] = num;              //Insert num in the nums array
-                    graph2D[vertIndex][indexNums] = num;
+                    graph2D[vertIndex][indexNums] = num;//Insert num into the graph2D multidimensional array
                     indexNums++;                        //Increase the indexNums
 
-                    if (indexNums == totVertices)       //If we have inserted the line of numbers into the array
-                        break;                          //Break off the while-loop
+                    if (num != 0)                       //If we found an edge
+                        totEdges++;                     //Increase the totEdges by 1
+
+                    if (indexNums == totVertices)       //If we have seen all the nun
+                        break;                          //Break off the while-loop, we have inserted the line of numbers into the graph2D
                 }   //End of if 'c' is a digit
                 else                                    //Else 'c' is not a number
                     continue;                           //We don't care if it's not a number so we continue to the next char
-            }   //End of while-loop
-            insertToGraph(nums, vertIndex);             //Call method to check what vertices are connected to this node and insert to graph
-            //testGraph[vertIndex] = new int[totVertices];
-            //testGraph[vertIndex] = nums;
-        }   //End of for-loop
-        //We get here after reading through the whole matrix and filling out our 'graph' with edges and their vertices
+            }   //End of while-loop, finished with the integers in the line of the matrix of the file
+        }   //End of for-loop, finished creating the graph2Dl (multidimensional array)
+        //We get here after reading through the whole matrix and saving it into the graph2D, multidimensional array
     }   //End of else, if there was no issue opening the file
 }   //End of constructor
 
 MinSpanTree::~MinSpanTree(){
     //Destructor for garbage collection purposes
-    delete graph;                                       //Perform garbage collection in the graph
     for (int i = 0; i < totVertices; i++)               //Traverse the array of nodes
     {
-        delete vertices[i];                             //Delete the node in the current location
-        delete[] graph2D[i];                            //Delete the data inside the 2D matrix
+        delete vertices[i];                             //Delete the array inside the current level of the 2D array
+        delete graph2D[i];                              //Delete the array inside the current level of the 2D array
     }
     delete vertices;                                    //Delete the vertices array
-    delete graph2D;                                     //Delete the 2D graph, int array
-    this->totVertices = 0;                              //Set total vertices back to 0
+    delete graph2D;                                     //Delete the 2D graph array
+    totVertices = 0;                                    //Set total vertices back to 0
 }   //End of destructor
-
-void MinSpanTree::insertToGraph(int *matrixLine, int vertIndex)
-{
-    /* insertToGraph private method, parameter(s): int array <matrixLine>, int <vertIndex>
-     * Objective: Given the array, figure what node's have an edge to the node in vertIndex, and insert to graph
-     * */
-
-    //Loop through the matrixLine, which has a length of totVertices
-    for (int index = 0; index < totVertices; index++)   //Loop through the matrixLine int array
-    {
-        int currNum = matrixLine[index];                //Save the current value in matrixLine as currNum
-        if (currNum == 0)                               //If currNum is 0
-            continue;                                   //Then we continue to the next loop
-        else                                            //Else currNum is NOT 0
-        {                                               //We insert a new node to the LL
-            int weight = currNum;                       //The currNum is the weight of the edge
-            graph->insert(vertIndex, index, weight);    //Insert edge and vertices's indexes to the graph as a node
-        }   //End of else,if the currNum is NOT 0
-    }   //End of for-loop
-}   //End of insertToGraph method
 
 MinHeap* MinSpanTree::buildQueue()
 {
     /**
-     * Objective: Create and return a MinHeap with the data inside graph2D
+     * Objective: Create and return a MinHeap with the data inside graph2D array
      * Iterate through the graph2D, multi-dimensional array, and insert the data into the MinHeap <queue>
      * -We only insert when the the variable 'value' is not equal to 0, then we insert the index locations & the value
      * */
 
-    MinHeap* queue = new MinHeap(graph->getSize());//Create a queue with size of total nodes in the graph
+    MinHeap* queue = new MinHeap(totEdges);                 //Create a queue with size of total edges in the graph
     for (int lvl = 0; lvl < totVertices; lvl++)             //Loop through every level in the matrix
     {
         for (int i = 0; i < totVertices; i++)               //Loop through every value in this level
@@ -308,7 +294,7 @@ void MinSpanTree::printMST(MinHeap *MST)
         int weight = graph2D[index1][index2];               //Get and save the weight of the edge from the graph
         MST->popMin();                                      //Pop the first/top node in the heap
         //Now output the results
-        std::cout << vertices[index1]->data << "-" << vertices[index2]->data << ": " << weight << std::endl;
+        std::cout << vertices[index1] << "-" << vertices[index2] << ": " << weight << std::endl;
     }   //End of while-loop
     //We get here after emptying/outputting all the data inside the heap/MST
 }   //End of printMST
