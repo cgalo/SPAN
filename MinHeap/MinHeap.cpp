@@ -26,9 +26,6 @@ MinHeap::~MinHeap()
     /* Destructor, parameter(s): None
      * Objective: Perform garbage collection on the MinHeap object
      * */
-
-    for (int i = 0; i < maxSize; i++)               //Traverse through the array of nodes
-        delete array[i];                            //Delete the nodes in the array
     delete array;                                   //Delete the array
     this->maxSize       = 0;                        //Set the maxSize back to 0
     this->currentSize   = 0;                        //Set the currentSize back to 0
